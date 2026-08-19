@@ -12,10 +12,10 @@
 
 - **Repository:** `AppianProject`
 - **Branch:** `main`
-- **Reviewed baseline commit:** `4bd039a6692e4d441df2819e7dec51c05644d664`
+- **Reviewed implementation commit:** `780afaa507442438c99efe752e71e70a172ad858`
 - **Delivery scope:** Audit Log Service source, Flyway migrations, tests, Docker/Compose configuration, CI workflow, and supporting documentation.
 
-The final submission must be committed before archive creation. Replace the reviewed baseline commit above with the exact final submission commit if the working tree has changed after this attestation was prepared.
+This attestation is a metadata commit that binds its implementation claims to the exact revision above.
 
 ## Claim-to-Evidence Mapping
 
