@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: audit-log-service
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
+  datasource:
+    url: ${AUDIT_DB_URL:jdbc:postgresql://localhost:5432/audit_log}
+    username: ${AUDIT_DB_USERNAME:audit_app}
+    password: ${AUDIT_DB_PASSWORD:change-me-for-local-development}
+    hikari:
+      pool-name: audit-log-pool
+      minimum-idle: ${AUDIT_DB_MIN_IDLE:2}
+      maximum-pool-size: ${AUDIT_DB_POOL_SIZE:10}
+      connection-timeout: ${AUDIT_DB_CONNECTION_TIMEOUT_MS:2000}
+      validation-timeout: ${AUDIT_DB_VALIDATION_TIMEOUT_MS:1000}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+server:
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level requestId=%X{requestId:-} %logger{36} - %msg%n"
+  level:
+    root: INFO
+    com.schwab.auditlog: INFO
+
+audit:
+  retention:
+    window: ${AUDIT_RETENTION_WINDOW:PT8760H}
+    schedule-delay: ${AUDIT_RETENTION_SCHEDULE_DELAY:PT1H}
+  redaction:
+    sensitive-field-names: accountNumber,ssn,email,phone,personalIdentifier
+    # Local development only. Production must inject a KMS-managed 256-bit key.
+    master-key: ${AUDIT_REDACTION_MASTER_KEY:MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=}

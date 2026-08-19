@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    environment:
+      # This compose file is deliberately a local-development launcher. Production must not include `local`.
+      SPRING_PROFILES_ACTIVE: docker,local
+      POSTGRES_DB: ${POSTGRES_DB:-audit_log}
+      POSTGRES_USER: ${POSTGRES_USER:-audit_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-for-local-development}
+      AUDIT_REDACTION_MASTER_KEY: ${AUDIT_REDACTION_MASTER_KEY:-MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: audit-log-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-audit_log}
+      POSTGRES_USER: ${POSTGRES_USER:-audit_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-for-local-development}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:

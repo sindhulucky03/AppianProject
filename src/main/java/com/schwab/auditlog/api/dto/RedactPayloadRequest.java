@@ -1,0 +1,8 @@
+package com.schwab.auditlog.api.dto;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import java.util.List;
+
+public record RedactPayloadRequest(@NotEmpty List<@NotBlank String> jsonPointers) {
+}

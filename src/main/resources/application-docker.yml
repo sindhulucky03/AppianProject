@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/${POSTGRES_DB:audit_log}
+    username: ${POSTGRES_USER:audit_app}
+    password: ${POSTGRES_PASSWORD:change-me-for-local-development}
